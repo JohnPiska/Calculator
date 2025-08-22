@@ -39,4 +39,10 @@ function operate() {
     }
 };
 
-operate();
+const button = document.querySelector('.button');
+const text = document.querySelector('.text');
+
+button.addEventListener("click", (event) => {
+    text.innerHTML = event.target.id;
+    console.log(event.target.id);
+})
