@@ -1,48 +1,68 @@
-function add(a, b) {
-    console.log(a + b);
-};
+let firstOperand = 0;
+let secondOperand = 0;
+let operator = '';
+const text = document.querySelector('.text');
 
-function substract(a, b) {
-    console.log(a - b);
-};
-
-function multiply(a, b) {
-    console.log(a * b);
-};
-
-function divide(a, b) {
-    console.log(a / b);
-};
-
-function operate() {
-    let userPromt = prompt("Введите пример!");
-    let problem = userPromt.split('');
-    let a = parseInt(problem[0]);
-    let b = parseInt(problem[2]);
-    let operator = problem[1];
-
+function operate(a, b, operator) {
+    a = parseFloat(a);
+    b = parseFloat(b);
     switch(operator) {
         case '+':
-            add(a,b);
-            break;
+            return a + b;
         case '-':
-            substract(a, b);
-            break;
+            return a - b;
         case '*':
-            multiply(a, b);
-            break;
+            return a * b;
         case '/':
-            divide(a, b);
-            break;
-        default:
-            console.log("Wrong operator!")
+            return a / b;
     }
 };
 
-const button = document.querySelector('.button');
-const text = document.querySelector('.text');
+function calculateIfReady() {
+    if(firstOperand !== '' && secondOperand !== '' && operator) {
+        firstOperand = operate(firstOperand, secondOperand, operator).toString();
+        secondOperand = '';
+        text.innerHTML = firstOperand;
+    }
+}
 
-button.addEventListener("click", (event) => {
-    text.innerHTML = event.target.id;
-    console.log(event.target.id);
-})
+const buttons = document.getElementsByClassName('button');
+
+for (let button of buttons) {
+    button.addEventListener("click", (event) => {
+        const id = event.target.id;
+
+        if (id >= '0' && id <= '9') {
+            if(!operator){
+                firstOperand += id;
+                text.innerHTML = firstOperand;
+                if (firstOperand.length > 0 && firstOperand[0] === '0'){
+                    firstOperand = firstOperand.slice(1);
+                }
+
+            }
+            else {
+                secondOperand += id;
+                text.innerHTML = secondOperand;
+                if (secondOperand.length > 0 && secondOperand[0] === '0'){
+                    secondOperand = secondOperand.slice(1);
+                }
+            }
+        }
+        else if(['+', '-', '*', '/'].includes(id)) {
+            calculateIfReady();
+            operator = id;
+        }
+        else if(id === "="){
+            calculateIfReady();
+            operator = id;
+        }
+        else if (id === 'clear') {
+            firstOperand = '';
+            secondOperand = '';
+            operator = '';
+            text.innerHTML = '0';
+        }
+    });
+}   
+
